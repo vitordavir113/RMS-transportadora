@@ -1,0 +1,89 @@
+{{ define "content" }}
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Caminhões</h1>
+    <p class="page-subtitle">Cavalos, tanques e bocas cadastradas.</p>
+  </div>
+
+  <a href="/trucks/new" class="btn btn-primary">
+    <i class="bi bi-plus-lg"></i>
+    Novo caminhão
+  </a>
+</div>
+
+{{ if .Trucks }}
+
+<div class="grid grid-2">
+  {{ range .Trucks }}
+  <article class="card card-hover">
+    <div class="card-header">
+      <div>
+        <h2 class="page-title">{{ .CavaloModelo }}</h2>
+
+        <div class="flex gap-2 mt-2">
+          <span class="plate">{{ .CavaloPlaca }}</span>
+          <span class="plate">{{ .TanquePlaca }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="grid grid-2">
+      <div>
+        <div class="stat-value">{{ len .Compartments }}</div>
+        <div class="stat-label">Bocas cadastradas</div>
+      </div>
+
+      <div>
+        <div class="stat-value">{{ formatLitros .TotalCapacidade }}</div>
+        <div class="stat-label">Litros totais</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="grid">
+      {{ range .Compartments }}
+      <div class="boca-card preenchida">
+        <div class="boca-head">
+          <span class="boca-numero">Boca {{ .Numero }}</span>
+          <span class="boca-capacidade">{{ formatLitros .CapacidadeLitros }} L</span>
+        </div>
+
+        <div class="gauge">
+          <div class="gauge-fill"></div>
+        </div>
+      </div>
+      {{ end }}
+    </div>
+
+    <div class="mt-4">
+      <a href="/trucks/{{ .ID }}/edit" class="btn btn-outline btn-block">
+        <i class="bi bi-pencil"></i>
+        Editar caminhão
+      </a>
+    </div>
+  </article>
+  {{ end }}
+</div>
+
+{{ else }}
+
+<div class="empty-state">
+  <i class="bi bi-truck"></i>
+  <div class="title">Nenhum caminhão cadastrado</div>
+  <p>Cadastre seu primeiro caminhão para começar a criar viagens.</p>
+
+  <div class="mt-4">
+    <a href="/trucks/new" class="btn btn-primary">
+      <i class="bi bi-plus-lg"></i>
+      Cadastrar primeiro caminhão
+    </a>
+  </div>
+</div>
+
+{{ end }}
+
+{{ end }}

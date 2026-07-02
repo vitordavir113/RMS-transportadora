@@ -1,0 +1,90 @@
+{{ define "content" }}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Viagens em andamento</h1>
+    <p class="page-subtitle">Acompanhe os caminhões que ainda não foram finalizados.</p>
+  </div>
+
+  <a href="/trips/new" class="btn btn-primary">
+    <i class="bi bi-plus-lg"></i>
+    Nova viagem
+  </a>
+</div>
+
+<div class="grid grid-3 mb-3">
+  <div class="card">
+    <div class="stat-value">{{ .TotalTrips }}</div>
+    <div class="stat-label">Viagens em andamento</div>
+  </div>
+
+  <div class="card">
+    <div class="stat-value">{{ formatLitros .TotalLitros }}</div>
+    <div class="stat-label">Litros em rota</div>
+  </div>
+
+  <div class="card">
+    <div class="stat-value">{{ .TotalTrucks }}</div>
+    <div class="stat-label">Caminhões cadastrados</div>
+  </div>
+</div>
+
+{{ if .Trips }}
+<div class="grid grid-2">
+  {{ range .Trips }}
+  <article class="card card-hover">
+    <div class="card-header">
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="badge badge-warning">
+            <span class="dot"></span>
+            Em andamento
+          </span>
+        </div>
+
+        <h2 class="page-title">{{ .Truck.CavaloModelo }}</h2>
+
+        <div class="flex gap-2 mt-2">
+          <span class="plate">{{ .Truck.CavaloPlaca }}</span>
+          <span class="plate">{{ .Truck.TanquePlaca }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="grid grid-2">
+      <div>
+        <div class="stat-value">{{ formatLitros .TotalLitros }}</div>
+        <div class="stat-label">Litros</div>
+      </div>
+
+      <div>
+        <div class="stat-value">{{ .QuantidadeClientes }}</div>
+        <div class="stat-label">Clientes</div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <a href="/trips/{{ .ID }}" class="btn btn-outline btn-block">
+        Abrir viagem
+        <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+  </article>
+  {{ end }}
+</div>
+{{ else }}
+<div class="empty-state">
+  <i class="bi bi-truck"></i>
+  <div class="title">Nenhuma viagem em andamento</div>
+  <p>Crie uma nova viagem para começar o acompanhamento.</p>
+
+  <div class="mt-4">
+    <a href="/trips/new" class="btn btn-primary">
+      <i class="bi bi-plus-lg"></i>
+      Criar primeira viagem
+    </a>
+  </div>
+</div>
+{{ end }}
+{{ end }}

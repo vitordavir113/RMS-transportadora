@@ -1,0 +1,88 @@
+{{ define "content" }}
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Histórico</h1>
+    <p class="page-subtitle">Viagens finalizadas e registradas.</p>
+  </div>
+</div>
+
+<form method="GET" action="/history" class="card mb-3">
+  <div class="grid grid-2">
+    <div class="form-row">
+      <label class="form-label">Pesquisar</label>
+      <input
+        class="form-control"
+        name="q"
+        value="{{ .Search }}"
+        placeholder="Cliente, placa ou modelo"
+      >
+    </div>
+
+    <div class="form-row" style="display:flex;align-items:end;">
+      <button class="btn btn-primary" type="submit">
+        <i class="bi bi-search"></i>
+        Buscar
+      </button>
+    </div>
+  </div>
+</form>
+
+{{ if .Trips }}
+
+<div class="grid grid-2">
+  {{ range .Trips }}
+  <article class="card card-hover">
+    <div class="card-header">
+      <div>
+        <span class="badge badge-success">
+          <span class="dot"></span>
+          Finalizada
+        </span>
+
+        <h2 class="page-title mt-3">
+          {{ .Truck.CavaloModelo }}
+        </h2>
+
+        <div class="flex gap-2 mt-2">
+          <span class="plate">{{ .Truck.CavaloPlaca }}</span>
+          <span class="plate">{{ .Truck.TanquePlaca }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="grid grid-2">
+      <div>
+        <div class="stat-value">{{ .TotalLitros }} L</div>
+        <div class="stat-label">Litros</div>
+      </div>
+
+      <div>
+        <div class="stat-value">{{ .QuantidadeClientes }}</div>
+        <div class="stat-label">Clientes</div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <a href="/trips/{{ .ID }}" class="btn btn-outline btn-block">
+        Abrir registro
+        <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+  </article>
+  {{ end }}
+</div>
+
+{{ else }}
+
+<div class="empty-state">
+  <i class="bi bi-clock-history"></i>
+  <div class="title">Nenhuma viagem finalizada</div>
+  <p>Quando uma viagem for finalizada, ela aparecerá aqui.</p>
+</div>
+
+{{ end }}
+
+{{ end }}

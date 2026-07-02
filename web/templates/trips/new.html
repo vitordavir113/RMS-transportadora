@@ -1,0 +1,57 @@
+{{ define "content" }}
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Nova viagem</h1>
+    <p class="page-subtitle">Escolha o caminhão, carregue as bocas e preencha cliente/produto.</p>
+  </div>
+</div>
+
+<form method="POST" action="/trips" class="card">
+  <div class="grid grid-2">
+    <div class="form-row">
+      <label class="form-label">Caminhão</label>
+
+      <select class="form-select" name="truck_id" id="truck_id" required>
+        <option value="">Selecione um caminhão</option>
+
+        {{ range .Trucks }}
+        <option value="{{ .ID }}">
+          {{ .CavaloModelo }} — {{ .CavaloPlaca }} / {{ .TanquePlaca }}
+        </option>
+        {{ end }}
+      </select>
+    </div>
+
+    <div class="form-row" style="display:flex;align-items:end;">
+      <button
+        type="button"
+        class="btn btn-outline"
+        hx-get="/trips/new/bocas"
+        hx-target="#bocas-container"
+        hx-swap="innerHTML"
+        hx-include="#truck_id"
+      >
+        <i class="bi bi-fuel-pump"></i>
+        Carregar bocas
+      </button>
+    </div>
+  </div>
+
+  <div id="bocas-container" class="mt-4">
+    <div class="empty-state">
+      <i class="bi bi-fuel-pump"></i>
+      <div class="title">Nenhum caminhão selecionado</div>
+      <p>Selecione um caminhão e clique em carregar bocas.</p>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <button type="submit" class="btn btn-primary btn-lg">
+      <i class="bi bi-check-lg"></i>
+      Criar viagem
+    </button>
+  </div>
+</form>
+
+{{ end }}

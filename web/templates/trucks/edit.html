@@ -1,0 +1,111 @@
+{{ define "content" }}
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Editar caminhão</h1>
+    <p class="page-subtitle">Altere os dados do cavalo, tanque e bocas.</p>
+  </div>
+
+  <a href="/trucks" class="btn btn-outline">
+    <i class="bi bi-arrow-left"></i>
+    Voltar
+  </a>
+</div>
+
+<form method="POST" action="/trucks/{{ .Truck.ID }}" class="card">
+  <div class="grid grid-3">
+    <div class="form-row">
+      <label class="form-label">Modelo do cavalo</label>
+      <input class="form-control" name="cavalo_modelo" value="{{ .Truck.CavaloModelo }}" required>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">Placa do cavalo</label>
+      <input class="form-control" name="cavalo_placa" value="{{ .Truck.CavaloPlaca }}" required>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">Placa do tanque</label>
+      <input class="form-control" name="tanque_placa" value="{{ .Truck.TanquePlaca }}" required>
+    </div>
+  </div>
+
+  <div class="mt-4 flex gap-2">
+    <button class="btn btn-primary" type="submit">
+      <i class="bi bi-check-lg"></i>
+      Salvar alterações
+    </button>
+  </div>
+</form>
+
+<div class="divider"></div>
+
+<div class="page-header">
+  <div>
+    <h2 class="page-title">Bocas cadastradas</h2>
+    <p class="page-subtitle">Compartimentos fixos do tanque.</p>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  {{ range .Truck.Compartments }}
+  <div class="boca-card preenchida">
+    <div class="boca-head">
+      <span class="boca-numero">Boca {{ .Numero }}</span>
+      <span class="boca-capacidade">{{ formatLitros .CapacidadeLitros }} L</span>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-fill"></div>
+    </div>
+
+    <form method="POST" action="/trucks/{{ $.Truck.ID }}/compartments/{{ .ID }}/delete" class="mt-3">
+      <button type="submit" class="btn btn-danger btn-sm">
+        <i class="bi bi-trash"></i>
+        Excluir boca
+      </button>
+    </form>
+  </div>
+  {{ end }}
+</div>
+
+<div class="divider"></div>
+
+<div class="card">
+  <div class="card-header">
+    <div>
+      <h2 class="page-title">Adicionar nova boca</h2>
+      <p class="page-subtitle">Informe número e capacidade.</p>
+    </div>
+  </div>
+
+  <form method="POST" action="/trucks/{{ .Truck.ID }}/compartments">
+    <div class="grid grid-2">
+      <div class="form-row">
+        <label class="form-label">Número da boca</label>
+        <input class="form-control" name="numero" placeholder="Ex: 1" required>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Capacidade em litros</label>
+        <input class="form-control" name="capacidade_litros" placeholder="Ex: 8000" required>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+      <i class="bi bi-plus-lg"></i>
+      Adicionar boca
+    </button>
+  </form>
+</div>
+
+<div class="divider"></div>
+
+<form method="POST" action="/trucks/{{ .Truck.ID }}/delete" onsubmit="return confirm('Tem certeza que deseja excluir este caminhão?')">
+  <button type="submit" class="btn btn-danger">
+    <i class="bi bi-trash"></i>
+    Excluir caminhão
+  </button>
+</form>
+
+{{ end }}

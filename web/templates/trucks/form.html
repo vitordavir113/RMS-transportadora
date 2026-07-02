@@ -1,0 +1,106 @@
+{{ define "content" }}
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Novo caminhão</h1>
+    <p class="page-subtitle">Cadastre o cavalo, tanque e as bocas do compartimento.</p>
+  </div>
+
+  <a href="/trucks" class="btn btn-outline">
+    <i class="bi bi-arrow-left"></i>
+    Voltar
+  </a>
+</div>
+
+<form method="POST" action="/trucks" class="card">
+  <div class="grid grid-3">
+    <div class="form-row">
+      <label class="form-label">Modelo do cavalo</label>
+      <input class="form-control" name="cavalo_modelo" placeholder="Ex: Scania R450" required>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">Placa do cavalo</label>
+      <input class="form-control" name="cavalo_placa" placeholder="Ex: QQG9B59" required>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">Placa do tanque</label>
+      <input class="form-control" name="tanque_placa" placeholder="Ex: UKK3D76" required>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">Bocas do tanque</h2>
+      <p class="page-subtitle">Informe número e capacidade de cada boca.</p>
+    </div>
+
+    <button type="button" class="btn btn-outline" onclick="addBoca()">
+      <i class="bi bi-plus-lg"></i>
+      Adicionar boca
+    </button>
+  </div>
+
+  <div id="bocas" class="grid grid-2">
+    <div class="boca-card">
+      <div class="boca-head">
+        <span class="boca-numero">Boca</span>
+        <span class="boca-capacidade">Compartimento 1</span>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Número</label>
+        <input class="form-control" name="boca_numero[]" value="1" required>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Capacidade em litros</label>
+        <input class="form-control" name="boca_capacidade[]" placeholder="Ex: 8000" required>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <button type="submit" class="btn btn-primary btn-lg">
+      <i class="bi bi-check-lg"></i>
+      Cadastrar caminhão
+    </button>
+  </div>
+</form>
+
+<script>
+let bocaIndex = 1;
+
+function addBoca() {
+  bocaIndex++;
+
+  const container = document.getElementById("bocas");
+
+  const div = document.createElement("div");
+  div.className = "boca-card";
+
+  div.innerHTML = `
+    <div class="boca-head">
+      <span class="boca-numero">Boca</span>
+      <span class="boca-capacidade">Compartimento ${bocaIndex}</span>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">Número</label>
+      <input class="form-control" name="boca_numero[]" value="${bocaIndex}" required>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">Capacidade em litros</label>
+      <input class="form-control" name="boca_capacidade[]" placeholder="Ex: 5000" required>
+    </div>
+  `;
+
+  container.appendChild(div);
+}
+</script>
+
+{{ end }}

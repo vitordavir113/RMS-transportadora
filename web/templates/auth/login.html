@@ -1,0 +1,45 @@
+{{ define "auth_content" }}
+
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="mark">TR</div>
+      <div>
+        <div class="name">Transportadora</div>
+        <div class="sub">Acesso ao sistema</div>
+      </div>
+    </div>
+
+    <div class="login-header">
+      <h1>Entrar</h1>
+      <p>Informe seu usuário e senha para acessar o painel.</p>
+    </div>
+
+    {{ if .Error }}
+    <div class="login-error">
+      <i class="bi bi-exclamation-triangle"></i>
+      {{ .Error }}
+    </div>
+    {{ end }}
+
+    <form method="POST" action="/login">
+      <div class="form-row">
+        <label class="form-label">Usuário</label>
+        <input class="form-control" name="username" placeholder="admin" autocomplete="username" required>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Senha</label>
+        <input class="form-control" type="password" name="password" placeholder="admin123" autocomplete="current-password" required>
+      </div>
+
+      <button class="btn btn-primary btn-lg btn-block" type="submit">
+        <i class="bi bi-box-arrow-in-right"></i>
+        Entrar
+      </button>
+    </form>
+
+  </div>
+</div>
+
+{{ end }}

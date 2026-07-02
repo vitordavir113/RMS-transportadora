@@ -1,0 +1,73 @@
+{{ define "content" }}
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Viagem #{{ .Trip.ID }}</h1>
+    <p class="page-subtitle">
+      {{ .Trip.Truck.CavaloModelo }}
+      ·
+      <span class="plate">{{ .Trip.Truck.CavaloPlaca }}</span>
+      <span class="plate">{{ .Trip.Truck.TanquePlaca }}</span>
+    </p>
+  </div>
+
+  {{ if eq .Trip.Status "EM_ANDAMENTO" }}
+  <form method="POST" action="/trips/{{ .Trip.ID }}/finish">
+    <button type="submit" class="btn btn-primary">
+      <i class="bi bi-check-lg"></i>
+      Finalizar viagem
+    </button>
+  </form>
+  {{ else }}
+  <span class="badge badge-success">
+    <span class="dot"></span>
+    Finalizada
+  </span>
+  {{ end }}
+</div>
+
+<div class="grid grid-3 mb-3">
+  <div class="card">
+    <div class="stat-value">{{ .TotalLitros }} L</div>
+    <div class="stat-label">Litros transportados</div>
+  </div>
+
+  <div class="card">
+    <div class="stat-value">{{ .QuantidadeClientes }}</div>
+    <div class="stat-label">Clientes</div>
+  </div>
+
+  <div class="card">
+    <div class="stat-value">
+      {{ if eq .Trip.Status "EM_ANDAMENTO" }}Em andamento{{ else }}Finalizada{{ end }}
+    </div>
+    <div class="stat-label">Status</div>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  {{ range .Trip.Compartments }}
+  <div class="boca-card preenchida">
+    <div class="boca-head">
+      <span class="boca-numero">Boca {{ .Numero }}</span>
+      <span class="boca-capacidade">{{ .CapacidadeLitros }} L</span>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-fill"></div>
+    </div>
+
+    <div class="boca-info-row">
+      <span>Cliente</span>
+      <strong>{{ .Cliente }}</strong>
+    </div>
+
+    <div class="boca-info-row">
+      <span>Produto</span>
+      <strong>{{ .Produto }}</strong>
+    </div>
+  </div>
+  {{ end }}
+</div>
+
+{{ end }}
