@@ -163,9 +163,6 @@ func (h *TripHandler) Show(c *gin.Context) {
 
 	var trip models.Trip
 	if err := h.DB.
-		Preload("Tractor").
-		Preload("Trailer").
-		Preload("Driver").
 		Preload("Compartments", func(db *gorm.DB) *gorm.DB {
 			return db.Order("numero asc")
 		}).
@@ -202,7 +199,7 @@ func (h *TripHandler) Finish(c *gin.Context) {
 	}
 
 	if err := h.Service.FinishTrip(CurrentCompanyID(c), uint(tripID)); err != nil {
-		c.String(http.StatusUnprocessableEntity, "erro ao finalizar viagem: %v", err)
+		c.String(http.StatusInternalServerError, "erro ao listar viagens: %v", err)
 		return
 	}
 
@@ -214,9 +211,6 @@ func (h *TripHandler) List(c *gin.Context) {
 	var trips []models.Trip
 
 	if err := h.DB.
-		Preload("Tractor").
-		Preload("Trailer").
-		Preload("Driver").
 		Preload("Compartments").
 		Where("company_id = ?", CurrentCompanyID(c)).
 		Order("created_at desc").
