@@ -1,73 +1,66 @@
 {{ define "content" }}
-
 <div class="page-header">
-  <div>
-    <h1 class="page-title">Viagem #{{ .Trip.ID }}</h1>
-    <p class="page-subtitle">
-      {{ .Trip.Truck.CavaloModelo }}
-      ·
-      <span class="plate">{{ .Trip.Truck.CavaloPlaca }}</span>
-      <span class="plate">{{ .Trip.Truck.TanquePlaca }}</span>
-    </p>
+  <div class="page-title">
+    <h1>Viagem #{{ .Trip.ID }}</h1>
+    <p>{{ formatDate .Trip.CreatedAt }}</p>
   </div>
 
-  {{ if eq .Trip.Status "EM_ANDAMENTO" }}
-  <form method="POST" action="/trips/{{ .Trip.ID }}/finish">
-    <button type="submit" class="btn btn-primary">
-      <i class="bi bi-check-lg"></i>
-      Finalizar viagem
-    </button>
-  </form>
-  {{ else }}
-  <span class="badge badge-success">
-    <span class="dot"></span>
-    Finalizada
-  </span>
-  {{ end }}
-</div>
+  <div class="actions">
+    <a href="/trips" class="btn btn-secondary">Voltar</a>
 
-<div class="grid grid-3 mb-3">
-  <div class="card">
-    <div class="stat-value">{{ .TotalLitros }} L</div>
-    <div class="stat-label">Litros transportados</div>
-  </div>
-
-  <div class="card">
-    <div class="stat-value">{{ .QuantidadeClientes }}</div>
-    <div class="stat-label">Clientes</div>
-  </div>
-
-  <div class="card">
-    <div class="stat-value">
-      {{ if eq .Trip.Status "EM_ANDAMENTO" }}Em andamento{{ else }}Finalizada{{ end }}
-    </div>
-    <div class="stat-label">Status</div>
+    {{ if eq .Trip.Status "EM_ANDAMENTO" }}
+    <form method="POST" action="/trips/{{ .Trip.ID }}/finish">
+      <button class="btn btn-primary" type="submit">Finalizar</button>
+    </form>
+    {{ end }}
   </div>
 </div>
 
-<div class="grid grid-2">
-  {{ range .Trip.Compartments }}
-  <div class="boca-card preenchida">
-    <div class="boca-head">
-      <span class="boca-numero">Boca {{ .Numero }}</span>
-      <span class="boca-capacidade">{{ .CapacidadeLitros }} L</span>
-    </div>
-
-    <div class="gauge">
-      <div class="gauge-fill"></div>
-    </div>
-
-    <div class="boca-info-row">
-      <span>Cliente</span>
-      <strong>{{ .Cliente }}</strong>
-    </div>
-
-    <div class="boca-info-row">
-      <span>Produto</span>
-      <strong>{{ .Produto }}</strong>
-    </div>
+<div class="trip-summary-grid">
+  <div class="trip-summary-card">
+    <div class="trip-summary-label">Cavalo</div>
+    <div class="trip-summary-value">{{ .Trip.TractorPlateSnapshot }}</div>
   </div>
-  {{ end }}
+
+  <div class="trip-summary-card">
+    <div class="trip-summary-label">Tanque</div>
+    <div class="trip-summary-value">{{ .Trip.TrailerPlateSnapshot }}</div>
+  </div>
+
+  <div class="trip-summary-card">
+    <div class="trip-summary-label">Motorista</div>
+    <div class="trip-summary-value">{{ .Trip.DriverNameSnapshot }}</div>
+  </div>
+
+  <div class="trip-summary-card primary">
+    <div class="trip-summary-label">Frete total</div>
+    <div class="trip-summary-value">R$ {{ printf "%.2f" .TotalFrete }}</div>
+  </div>
 </div>
 
+<div class="card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Boca</th>
+        <th>Cliente</th>
+        <th>Produto</th>
+        <th>Litros</th>
+        <th>Frete</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{ range .Trip.Compartments }}
+      <tr>
+        <td>Boca {{ .Numero }}</td>
+        <td>{{ .ClientNameSnapshot }}</td>
+        <td>{{ .Produto }}</td>
+        <td>{{ printf "%.0f" .CapacidadeLitros }} L</td>
+        <td>R$ {{ printf "%.2f" .FreightTotal }}</td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+</div>
 {{ end }}

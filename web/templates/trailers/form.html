@@ -1,0 +1,94 @@
+{{ define "content" }}
+<form method="POST" action="/trailers" class="card">
+  <div class="form-grid">
+    <div class="form-group">
+      <label>Placa</label>
+      <input name="plate" required>
+    </div>
+
+    <div class="form-group">
+      <label>Tipo</label>
+      <select name="type">
+        <option value="tanque">Tanque</option>
+        <option value="carreta">Carreta</option>
+        <option value="bitrem">Bitrem</option>
+        <option value="rodotrem">Rodotrem</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Proprietário</label>
+      <input name="owner">
+    </div>
+
+    <div class="form-group">
+      <label>Status</label>
+      <select name="status">
+        <option value="ativo">Ativo</option>
+        <option value="manutenção">Manutenção</option>
+        <option value="vendido">Vendido</option>
+        <option value="inativo">Inativo</option>
+      </select>
+    </div>
+
+    <div class="form-group full">
+      <label>Observações</label>
+      <textarea name="notes" rows="4"></textarea>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 22px;">
+    <h3 style="margin-top: 0;">Bocas / Compartimentos</h3>
+
+    <div id="compartments">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Número da boca</label>
+          <input name="boca_numero[]" type="number" value="1">
+        </div>
+
+        <div class="form-group">
+          <label>Capacidade em litros</label>
+          <input name="boca_capacidade[]" type="number" step="0.01">
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-secondary" type="button" onclick="addCompartment()" style="margin-top: 14px;">
+      Adicionar boca
+    </button>
+  </div>
+
+  <div class="actions" style="margin-top: 22px;">
+    <button class="btn btn-primary" type="submit">Salvar tanque</button>
+    <a class="btn btn-secondary" href="/trailers">Cancelar</a>
+  </div>
+</form>
+
+<script>
+  let bocaIndex = 2;
+
+  function addCompartment() {
+    const container = document.getElementById("compartments");
+
+    const div = document.createElement("div");
+    div.className = "form-grid";
+    div.style.marginTop = "12px";
+
+    div.innerHTML = `
+      <div class="form-group">
+        <label>Número da boca</label>
+        <input name="boca_numero[]" type="number" value="${bocaIndex}">
+      </div>
+
+      <div class="form-group">
+        <label>Capacidade em litros</label>
+        <input name="boca_capacidade[]" type="number" step="0.01">
+      </div>
+    `;
+
+    container.appendChild(div);
+    bocaIndex++;
+  }
+</script>
+{{ end }}

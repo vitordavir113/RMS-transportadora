@@ -1,90 +1,83 @@
 {{ define "content" }}
-<div class="page-header">
-  <div>
-    <h1 class="page-title">Viagens em andamento</h1>
-    <p class="page-subtitle">Acompanhe os caminhões que ainda não foram finalizados.</p>
-  </div>
-
-  <a href="/trips/new" class="btn btn-primary">
-    <i class="bi bi-plus-lg"></i>
-    Nova viagem
-  </a>
-</div>
-
-<div class="grid grid-3 mb-3">
-  <div class="card">
-    <div class="stat-value">{{ .TotalTrips }}</div>
-    <div class="stat-label">Viagens em andamento</div>
-  </div>
-
-  <div class="card">
-    <div class="stat-value">{{ formatLitros .TotalLitros }}</div>
-    <div class="stat-label">Litros em rota</div>
-  </div>
-
-  <div class="card">
-    <div class="stat-value">{{ .TotalTrucks }}</div>
-    <div class="stat-label">Caminhões cadastrados</div>
-  </div>
-</div>
-
-{{ if .Trips }}
-<div class="grid grid-2">
-  {{ range .Trips }}
-  <article class="card card-hover">
-    <div class="card-header">
-      <div>
-        <div class="flex items-center gap-2 mb-3">
-          <span class="badge badge-warning">
-            <span class="dot"></span>
-            Em andamento
-          </span>
-        </div>
-
-        <h2 class="page-title">{{ .Truck.CavaloModelo }}</h2>
-
-        <div class="flex gap-2 mt-2">
-          <span class="plate">{{ .Truck.CavaloPlaca }}</span>
-          <span class="plate">{{ .Truck.TanquePlaca }}</span>
-        </div>
-      </div>
+<div class="dashboard-shell">
+  <div class="dashboard-hero">
+    <div class="dashboard-title">
+      <h1>Dashboard</h1>
+      <p>Resumo operacional e financeiro da transportadora.</p>
     </div>
 
-    <div class="divider"></div>
-
-    <div class="grid grid-2">
-      <div>
-        <div class="stat-value">{{ formatLitros .TotalLitros }}</div>
-        <div class="stat-label">Litros</div>
-      </div>
-
-      <div>
-        <div class="stat-value">{{ .QuantidadeClientes }}</div>
-        <div class="stat-label">Clientes</div>
-      </div>
-    </div>
-
-    <div class="mt-4">
-      <a href="/trips/{{ .ID }}" class="btn btn-outline btn-block">
-        Abrir viagem
-        <i class="bi bi-arrow-right"></i>
+    <div class="actions">
+      <a href="/reports/monthly" class="btn btn-secondary">Relatórios</a>
+      <a href="/trips/new" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i>
+        Nova viagem
       </a>
     </div>
-  </article>
-  {{ end }}
-</div>
-{{ else }}
-<div class="empty-state">
-  <i class="bi bi-truck"></i>
-  <div class="title">Nenhuma viagem em andamento</div>
-  <p>Crie uma nova viagem para começar o acompanhamento.</p>
+  </div>
 
-  <div class="mt-4">
-    <a href="/trips/new" class="btn btn-primary">
-      <i class="bi bi-plus-lg"></i>
-      Criar primeira viagem
-    </a>
+  <div class="metric-grid">
+    <div class="metric-card primary">
+      <div class="metric-label">Frete no mês</div>
+      <div class="metric-value">R$ {{ printf "%.2f" .MonthlyFreight }}</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">Viagens em andamento</div>
+      <div class="metric-value">{{ .ActiveTrips }}</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">Litros em rota</div>
+      <div class="metric-value">{{ formatLitros .ActiveLiters }}</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">Finalizadas no mês</div>
+      <div class="metric-value">{{ .FinishedThisMonth }}</div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Viagens em andamento</h2>
+        <a href="/trips" class="btn btn-secondary">Ver todas</a>
+      </div>
+
+      {{ if .Trips }}
+      <div class="trip-list">
+        {{ range .Trips }}
+        <article class="trip-item">
+          <div class="trip-main">
+            <strong>{{ .TractorPlateSnapshot }} + {{ .TrailerPlateSnapshot }}</strong>
+            <span>{{ .DriverNameSnapshot }} · {{ formatLitros .TotalLitros }} L · R$ {{ printf "%.2f" .TotalFrete }}</span>
+          </div>
+
+          <a href="/trips/{{ .ID }}" class="btn btn-secondary">Abrir</a>
+        </article>
+        {{ end }}
+      </div>
+      {{ else }}
+      <div class="empty">
+        <strong>Nenhuma viagem em andamento</strong>
+        <p>Crie uma nova viagem para começar o acompanhamento.</p>
+        <a href="/trips/new" class="btn btn-primary">Criar primeira viagem</a>
+      </div>
+      {{ end }}
+    </section>
+
+    <aside class="panel">
+      <div class="panel-header">
+        <h2>Base cadastrada</h2>
+      </div>
+
+      <div class="quick-actions">
+        <div class="quick-action">Cavalos ativos: {{ .TractorsCount }}</div>
+        <div class="quick-action">Tanques ativos: {{ .TrailersCount }}</div>
+        <div class="quick-action">Clientes ativos: {{ .ClientsCount }}</div>
+        <div class="quick-action">Frete em rota: R$ {{ printf "%.2f" .ActiveFreight }}</div>
+      </div>
+    </aside>
   </div>
 </div>
-{{ end }}
 {{ end }}

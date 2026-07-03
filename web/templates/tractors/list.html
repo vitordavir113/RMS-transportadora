@@ -1,0 +1,47 @@
+{{ define "content" }}
+<div class="page-header">
+  <div class="page-title">
+    <h1>Cavalos</h1>
+    <p>Cavalos mecânicos disponíveis para composição das viagens.</p>
+  </div>
+
+  <div class="actions">
+    <a href="/tractors/new" class="btn btn-primary">Novo cavalo</a>
+  </div>
+</div>
+
+<div class="card">
+  {{ if .Tractors }}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Placa</th>
+        <th>Modelo</th>
+        <th>Proprietário</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{ range .Tractors }}
+      <tr>
+        <td>{{ .Plate }}</td>
+        <td>{{ .Model }}</td>
+        <td>{{ .Owner }}</td>
+        <td><span class="badge">{{ .Status }}</span></td>
+        <td class="actions">
+          <a class="btn btn-secondary" href="/tractors/{{ .ID }}/edit">Editar</a>
+          <form method="POST" action="/tractors/{{ .ID }}/delete">
+            <button class="btn btn-danger" type="submit">Desativar</button>
+          </form>
+        </td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+  {{ else }}
+  <div class="empty">Nenhum cavalo cadastrado.</div>
+  {{ end }}
+</div>
+{{ end }}

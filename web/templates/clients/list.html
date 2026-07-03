@@ -1,0 +1,49 @@
+{{ define "content" }}
+<div class="page-header">
+  <div class="page-title">
+    <h1>Clientes</h1>
+    <p>Clientes cadastrados e configuração de frete.</p>
+  </div>
+
+  <div class="actions">
+    <a href="/clients/new" class="btn btn-primary">Novo cliente</a>
+  </div>
+</div>
+
+<div class="card">
+  {{ if .Clients }}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Documento</th>
+        <th>Telefone</th>
+        <th>Tipo de frete</th>
+        <th>Valor</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{ range .Clients }}
+      <tr>
+        <td>{{ .Name }}</td>
+        <td>{{ .Document }}</td>
+        <td>{{ .Phone }}</td>
+        <td><span class="badge">{{ .FreightType }}</span></td>
+        <td>R$ {{ printf "%.2f" .FreightValue }}</td>
+        <td class="actions">
+          <a class="btn btn-secondary" href="/clients/{{ .ID }}/edit">Editar</a>
+          <form method="POST" action="/clients/{{ .ID }}/delete">
+            <button class="btn btn-danger" type="submit">Desativar</button>
+          </form>
+        </td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+  {{ else }}
+  <div class="empty">Nenhum cliente cadastrado.</div>
+  {{ end }}
+</div>
+{{ end }}

@@ -1,0 +1,49 @@
+{{ define "content" }}
+<div class="page-header">
+  <div class="page-title">
+    <h1>Tanques</h1>
+    <p>Tanques e carretas separados dos cavalos mecânicos.</p>
+  </div>
+
+  <div class="actions">
+    <a href="/trailers/new" class="btn btn-primary">Novo tanque</a>
+  </div>
+</div>
+
+<div class="card">
+  {{ if .Trailers }}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Placa</th>
+        <th>Tipo</th>
+        <th>Bocas</th>
+        <th>Capacidade total</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{ range .Trailers }}
+      <tr>
+        <td>{{ .Plate }}</td>
+        <td>{{ .Type }}</td>
+        <td>{{ len .Compartments }}</td>
+        <td>{{ printf "%.0f" .TotalCapacidade }} L</td>
+        <td><span class="badge">{{ .Status }}</span></td>
+        <td class="actions">
+          <a class="btn btn-secondary" href="/trailers/{{ .ID }}/edit">Editar</a>
+          <form method="POST" action="/trailers/{{ .ID }}/delete">
+            <button class="btn btn-danger" type="submit">Desativar</button>
+          </form>
+        </td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+  {{ else }}
+  <div class="empty">Nenhum tanque/carreta cadastrado.</div>
+  {{ end }}
+</div>
+{{ end }}

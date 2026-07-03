@@ -1,57 +1,51 @@
 {{ define "content" }}
-
-<div class="page-header">
-  <div>
-    <h1 class="page-title">Nova viagem</h1>
-    <p class="page-subtitle">Escolha o caminhão, carregue as bocas e preencha cliente/produto.</p>
-  </div>
-</div>
-
 <form method="POST" action="/trips" class="card">
-  <div class="grid grid-2">
-    <div class="form-row">
-      <label class="form-label">Caminhão</label>
-
-      <select class="form-select" name="truck_id" id="truck_id" required>
-        <option value="">Selecione um caminhão</option>
-
-        {{ range .Trucks }}
-        <option value="{{ .ID }}">
-          {{ .CavaloModelo }} — {{ .CavaloPlaca }} / {{ .TanquePlaca }}
-        </option>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>Cavalo</label>
+      <select name="tractor_id" required>
+        <option value="">Selecione</option>
+        {{ range .Tractors }}
+        <option value="{{ .ID }}">{{ .Plate }} — {{ .Model }}</option>
         {{ end }}
       </select>
     </div>
 
-    <div class="form-row" style="display:flex;align-items:end;">
-      <button
-        type="button"
-        class="btn btn-outline"
-        hx-get="/trips/new/bocas"
-        hx-target="#bocas-container"
-        hx-swap="innerHTML"
-        hx-include="#truck_id"
+    <div class="form-group">
+      <label>Tanque/Carreta</label>
+      <select
+  id="trailer_id"
+  name="trailer_id"
+  required
+  hx-get="/trips/new/bocas"
+  hx-target="#bocas-container"
+  hx-trigger="change"
+  hx-include="#trailer_id"
+>
       >
-        <i class="bi bi-fuel-pump"></i>
-        Carregar bocas
-      </button>
+        <option value="">Selecione</option>
+        {{ range .Trailers }}
+        <option value="{{ .ID }}">{{ .Plate }} — {{ .Type }}</option>
+        {{ end }}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Motorista</label>
+      <select name="driver_id" required>
+        <option value="">Selecione</option>
+        {{ range .Drivers }}
+        <option value="{{ .ID }}">{{ .Name }}</option>
+        {{ end }}
+      </select>
     </div>
   </div>
 
-  <div id="bocas-container" class="mt-4">
-    <div class="empty-state">
-      <i class="bi bi-fuel-pump"></i>
-      <div class="title">Nenhum caminhão selecionado</div>
-      <p>Selecione um caminhão e clique em carregar bocas.</p>
-    </div>
-  </div>
+  <div id="bocas-container" style="margin-top: 22px;"></div>
 
-  <div class="mt-4">
-    <button type="submit" class="btn btn-primary btn-lg">
-      <i class="bi bi-check-lg"></i>
-      Criar viagem
-    </button>
+  <div class="actions" style="margin-top: 22px;">
+    <button class="btn btn-primary" type="submit">Criar viagem</button>
+    <a class="btn btn-secondary" href="/trips">Cancelar</a>
   </div>
 </form>
-
 {{ end }}

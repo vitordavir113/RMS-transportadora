@@ -1,0 +1,47 @@
+{{ define "content" }}
+<div class="page-header">
+  <div class="page-title">
+    <h1>Motoristas</h1>
+    <p>Motoristas ativos disponíveis para viagens.</p>
+  </div>
+
+  <div class="actions">
+    <a href="/drivers/new" class="btn btn-primary">Novo motorista</a>
+  </div>
+</div>
+
+<div class="card">
+  {{ if .Drivers }}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>CPF</th>
+        <th>Telefone</th>
+        <th>CNH</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{ range .Drivers }}
+      <tr>
+        <td>{{ .Name }}</td>
+        <td>{{ .CPF }}</td>
+        <td>{{ .Phone }}</td>
+        <td>{{ .CNH }}</td>
+        <td class="actions">
+          <a class="btn btn-secondary" href="/drivers/{{ .ID }}/edit">Editar</a>
+          <form method="POST" action="/drivers/{{ .ID }}/delete">
+            <button class="btn btn-danger" type="submit">Desativar</button>
+          </form>
+        </td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+  {{ else }}
+  <div class="empty">Nenhum motorista cadastrado.</div>
+  {{ end }}
+</div>
+{{ end }}   

@@ -1,0 +1,91 @@
+{{ define "content" }}
+<div class="dashboard-shell">
+  <div class="dashboard-hero">
+    <div class="dashboard-title">
+      <h1>{{ .Title }}</h1>
+      <p>{{ .Summary.PeriodLabel }}</p>
+    </div>
+
+    <div class="actions">
+      <a href="/reports/weekly" class="btn btn-secondary">Semana</a>
+      <a href="/reports/monthly" class="btn btn-primary">Mês</a>
+    </div>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric-card primary">
+      <div class="metric-label">Frete gerado</div>
+      <div class="metric-value">R$ {{ printf "%.2f" .Summary.TotalFreight }}</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">Variação</div>
+      <div class="metric-value">{{ printf "%.1f" .Summary.FreightVariation }}%</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">Litros transportados</div>
+      <div class="metric-value">{{ printf "%.0f" .Summary.TotalLiters }}</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">Média por viagem</div>
+      <div class="metric-value">R$ {{ printf "%.2f" .Summary.AveragePerTrip }}</div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Frete por cliente</h2>
+      </div>
+
+      {{ if .Summary.FreightByClient }}
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Viagens</th>
+            <th>Litros</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {{ range .Summary.FreightByClient }}
+          <tr>
+            <td>{{ .ClientName }}</td>
+            <td>{{ .Trips }}</td>
+            <td>{{ printf "%.0f" .Liters }} L</td>
+            <td>R$ {{ printf "%.2f" .Total }}</td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+      {{ else }}
+      <div class="empty">Nenhum frete registrado nesse período.</div>
+      {{ end }}
+    </section>
+
+    <aside class="panel">
+      <div class="panel-header">
+        <h2>Resumo</h2>
+      </div>
+
+      <div class="quick-actions">
+        <div class="quick-action">
+          Finalizadas: {{ .Summary.FinishedTrips }}
+        </div>
+
+        <div class="quick-action">
+          Em andamento: {{ .Summary.ActiveTrips }}
+        </div>
+
+        <div class="quick-action">
+          Período anterior: R$ {{ printf "%.2f" .Summary.PreviousFreight }}
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+{{ end }}

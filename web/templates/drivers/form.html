@@ -1,0 +1,30 @@
+{{ define "content" }}
+<form method="POST" action="{{ if .Driver.ID }}/drivers/{{ .Driver.ID }}{{ else }}/drivers{{ end }}" class="card">
+  <div class="form-grid">
+    <div class="form-group">
+      <label>Nome</label>
+      <input name="name" value="{{ .Driver.Name }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>CPF</label>
+      <input name="cpf" value="{{ .Driver.CPF }}">
+    </div>
+
+    <div class="form-group">
+      <label>Telefone</label>
+      <input name="phone" value="{{ .Driver.Phone }}">
+    </div>
+
+    <div class="form-group">
+      <label>CNH</label>
+      <input name="cnh" value="{{ .Driver.CNH }}">
+    </div>
+  </div>
+
+  <div class="actions" style="margin-top: 22px;">
+    <button class="btn btn-primary" type="submit">Salvar motorista</button>
+    <a class="btn btn-secondary" href="/drivers">Cancelar</a>
+  </div>
+</form>
+{{ end }}

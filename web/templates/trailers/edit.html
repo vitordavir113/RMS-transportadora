@@ -1,0 +1,93 @@
+{{ define "content" }}
+<form method="POST" action="/trailers/{{ .Trailer.ID }}" class="card">
+  <div class="form-grid">
+    <div class="form-group">
+      <label>Placa</label>
+      <input name="plate" value="{{ .Trailer.Plate }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>Tipo</label>
+      <select name="type">
+        <option value="tanque" {{ if eq .Trailer.Type "tanque" }}selected{{ end }}>Tanque</option>
+        <option value="carreta" {{ if eq .Trailer.Type "carreta" }}selected{{ end }}>Carreta</option>
+        <option value="bitrem" {{ if eq .Trailer.Type "bitrem" }}selected{{ end }}>Bitrem</option>
+        <option value="rodotrem" {{ if eq .Trailer.Type "rodotrem" }}selected{{ end }}>Rodotrem</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Proprietário</label>
+      <input name="owner" value="{{ .Trailer.Owner }}">
+    </div>
+
+    <div class="form-group">
+      <label>Status</label>
+      <select name="status">
+        <option value="ativo" {{ if eq .Trailer.Status "ativo" }}selected{{ end }}>Ativo</option>
+        <option value="manutenção" {{ if eq .Trailer.Status "manutenção" }}selected{{ end }}>Manutenção</option>
+        <option value="vendido" {{ if eq .Trailer.Status "vendido" }}selected{{ end }}>Vendido</option>
+        <option value="inativo" {{ if eq .Trailer.Status "inativo" }}selected{{ end }}>Inativo</option>
+      </select>
+    </div>
+
+    <div class="form-group full">
+      <label>Observações</label>
+      <textarea name="notes" rows="4">{{ .Trailer.Notes }}</textarea>
+    </div>
+  </div>
+
+  <div class="actions" style="margin-top: 22px;">
+    <button class="btn btn-primary" type="submit">Salvar alterações</button>
+    <a class="btn btn-secondary" href="/trailers">Cancelar</a>
+  </div>
+</form>
+
+<div class="card" style="margin-top: 22px;">
+  <h3 style="margin-top: 0;">Bocas / Compartimentos</h3>
+
+  {{ if .Trailer.Compartments }}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Boca</th>
+        <th>Capacidade</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{ range .Trailer.Compartments }}
+      <tr>
+        <td>Boca {{ .Numero }}</td>
+        <td>{{ printf "%.0f" .CapacidadeLitros }} L</td>
+        <td>
+          <form method="POST" action="/trailers/{{ $.Trailer.ID }}/compartments/{{ .ID }}/delete">
+            <button class="btn btn-danger" type="submit">Excluir</button>
+          </form>
+        </td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+  {{ else }}
+  <div class="empty">Nenhuma boca cadastrada.</div>
+  {{ end }}
+
+  <form method="POST" action="/trailers/{{ .Trailer.ID }}/compartments" style="margin-top: 20px;">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Número da boca</label>
+        <input name="numero" type="number" required>
+      </div>
+
+      <div class="form-group">
+        <label>Capacidade em litros</label>
+        <input name="capacidade_litros" type="number" step="0.01" required>
+      </div>
+    </div>
+
+    <button class="btn btn-secondary" type="submit" style="margin-top: 14px;">Adicionar boca</button>
+  </form>
+</div>
+{{ end }}

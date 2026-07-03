@@ -1,0 +1,40 @@
+{{ define "content" }}
+<form method="POST" action="{{ if .Tractor.ID }}/tractors/{{ .Tractor.ID }}{{ else }}/tractors{{ end }}" class="card">
+  <div class="form-grid">
+    <div class="form-group">
+      <label>Modelo</label>
+      <input name="model" value="{{ .Tractor.Model }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>Placa</label>
+      <input name="plate" value="{{ .Tractor.Plate }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>Proprietário</label>
+      <input name="owner" value="{{ .Tractor.Owner }}">
+    </div>
+
+    <div class="form-group">
+      <label>Status</label>
+      <select name="status">
+        <option value="ativo" {{ if eq .Tractor.Status "ativo" }}selected{{ end }}>Ativo</option>
+        <option value="manutenção" {{ if eq .Tractor.Status "manutenção" }}selected{{ end }}>Manutenção</option>
+        <option value="vendido" {{ if eq .Tractor.Status "vendido" }}selected{{ end }}>Vendido</option>
+        <option value="inativo" {{ if eq .Tractor.Status "inativo" }}selected{{ end }}>Inativo</option>
+      </select>
+    </div>
+
+    <div class="form-group full">
+      <label>Observações</label>
+      <textarea name="notes" rows="4">{{ .Tractor.Notes }}</textarea>
+    </div>
+  </div>
+
+  <div class="actions" style="margin-top: 22px;">
+    <button class="btn btn-primary" type="submit">Salvar cavalo</button>
+    <a class="btn btn-secondary" href="/tractors">Cancelar</a>
+  </div>
+</form>
+{{ end }}

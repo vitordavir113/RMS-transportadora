@@ -2,17 +2,12 @@
 
 <div class="login-page">
   <div class="login-card">
-    <div class="login-brand">
-      <div class="mark">TR</div>
-      <div>
-        <div class="name">Transportadora</div>
-        <div class="sub">Acesso ao sistema</div>
-      </div>
-    </div>
-
+   <div class="login-brand-logo">
+  <img src="/static/img/vd-logo.png" alt="VD Gestão">
+</div>
     <div class="login-header">
       <h1>Entrar</h1>
-      <p>Informe seu usuário e senha para acessar o painel.</p>
+   <p>Acesse o painel de gestão da transportadora.</p>
     </div>
 
     {{ if .Error }}
@@ -24,14 +19,12 @@
 
     <form method="POST" action="/login">
       <div class="form-row">
-        <label class="form-label">Usuário</label>
-        <input class="form-control" name="username" placeholder="admin" autocomplete="username" required>
-      </div>
+        <label class="form-label" for="username">Usuário</label>
+<input id="username" class="form-control" name="username" placeholder="admin" autocomplete="username" required>
 
       <div class="form-row">
-        <label class="form-label">Senha</label>
-        <input class="form-control" type="password" name="password" placeholder="admin123" autocomplete="current-password" required>
-      </div>
+        <label class="form-label" for="password">Senha</label>
+<input id="password" class="form-control" type="password" name="password" placeholder="admin123" autocomplete="current-password" required>
 
       <button class="btn btn-primary btn-lg btn-block" type="submit">
         <i class="bi bi-box-arrow-in-right"></i>

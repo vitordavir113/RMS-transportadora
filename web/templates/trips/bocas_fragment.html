@@ -1,58 +1,47 @@
 {{ define "bocas_fragment" }}
+<div class="card">
+  <h3 style="margin-top: 0;">Bocas do tanque {{ .Trailer.Plate }}</h3>
 
-<div class="page-header">
-  <div>
-    <h2 class="page-title">Bocas do tanque</h2>
-    <p class="page-subtitle">
-      {{ .Truck.CavaloModelo }} ·
-      {{ .Truck.CavaloPlaca }} /
-      {{ .Truck.TanquePlaca }}
-    </p>
-  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Boca</th>
+        <th>Capacidade</th>
+        <th>Cliente</th>
+        <th>Produto</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{ range .Trailer.Compartments }}
+      <tr>
+        <td>
+          Boca {{ .Numero }}
+          <input type="hidden" name="compartment_id[]" value="{{ .ID }}">
+        </td>
+
+        <td>{{ printf "%.0f" .CapacidadeLitros }} L</td>
+
+        <td>
+          <select name="client_id[]" required>
+            <option value="">Selecione</option>
+            {{ range $.Clients }}
+            <option value="{{ .ID }}">{{ .Name }}</option>
+            {{ end }}
+          </select>
+        </td>
+
+        <td>
+          <select name="produto[]" required>
+            <option value="">Selecione</option>
+            {{ range $.Produtos }}
+            <option value="{{ . }}">{{ . }}</option>
+            {{ end }}
+          </select>
+        </td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
 </div>
-
-{{ if .Truck.Compartments }}
-
-<div class="grid grid-2">
-  {{ range .Truck.Compartments }}
-  <div class="boca-card preenchida">
-    <input type="hidden" name="compartment_id[]" value="{{ .ID }}">
-
-    <div class="boca-head">
-      <span class="boca-numero">Boca {{ .Numero }}</span>
-      <span class="boca-capacidade">{{ .CapacidadeLitros }} L</span>
-    </div>
-
-    <div class="gauge">
-      <div class="gauge-fill"></div>
-    </div>
-
-    <div class="form-row">
-      <label class="form-label">Cliente</label>
-      <input class="form-control" name="cliente[]" placeholder="Ex: Posto São José" required>
-    </div>
-
-    <div class="form-row">
-      <label class="form-label">Produto</label>
-      <select class="form-select" name="produto[]" required>
-        <option value="">Selecione</option>
-        {{ range $.Produtos }}
-        <option value="{{ . }}">{{ . }}</option>
-        {{ end }}
-      </select>
-    </div>
-  </div>
-  {{ end }}
-</div>
-
-{{ else }}
-
-<div class="empty-state">
-  <i class="bi bi-exclamation-triangle"></i>
-  <div class="title">Esse caminhão não tem bocas cadastradas</div>
-  <p>Edite o caminhão e cadastre as bocas antes de criar viagem.</p>
-</div>
-
-{{ end }}
-
 {{ end }}

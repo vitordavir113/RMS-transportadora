@@ -1,8 +1,15 @@
 {{ define "content" }}
 <div class="page-header">
   <div class="page-title">
-    <h1>Histórico de viagens</h1>
-    <p>Viagens finalizadas e registradas no sistema.</p>
+    <h1>Viagens</h1>
+    <p>Controle das viagens cadastradas.</p>
+  </div>
+
+  <div class="actions">
+    <a href="/trips/new" class="btn btn-primary">
+      <i class="bi bi-plus"></i>
+      Nova viagem
+    </a>
   </div>
 </div>
 
@@ -11,34 +18,31 @@
   <table class="table">
     <thead>
       <tr>
-        <th>Finalizada em</th>
+        <th>Data</th>
         <th>Cavalo</th>
         <th>Tanque</th>
         <th>Motorista</th>
-        <th>Litros</th>
+        <th>Status</th>
         <th>Frete</th>
         <th></th>
       </tr>
     </thead>
-
     <tbody>
       {{ range .Trips }}
       <tr>
-        <td>{{ formatDatePtr .FinishedAt }}</td>
+        <td>{{ formatDate .CreatedAt }}</td>
         <td>{{ .TractorPlateSnapshot }}</td>
         <td>{{ .TrailerPlateSnapshot }}</td>
         <td>{{ .DriverNameSnapshot }}</td>
-        <td>{{ printf "%.0f" .TotalLitros }} L</td>
+        <td><span class="badge">{{ .Status }}</span></td>
         <td>R$ {{ printf "%.2f" .TotalFrete }}</td>
-        <td>
-          <a href="/trips/{{ .ID }}" class="btn btn-secondary">Ver</a>
-        </td>
+        <td><a href="/trips/{{ .ID }}" class="btn btn-secondary">Ver</a></td>
       </tr>
       {{ end }}
     </tbody>
   </table>
   {{ else }}
-  <div class="empty">Nenhuma viagem finalizada ainda.</div>
+  <div class="empty">Nenhuma viagem cadastrada.</div>
   {{ end }}
 </div>
 {{ end }}

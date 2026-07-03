@@ -56,11 +56,8 @@ func formatLitros(f float64) string {
 func RenderPage(c *gin.Context, page string, data gin.H) {
 	files := []string{
 		templatesDir + "layout.html",
-		templatesDir + "partials/sidebar.html",
-		templatesDir + "partials/navbar.html",
 		templatesDir + page,
 	}
-
 	tmpl, err := template.New("layout.html").Funcs(funcMap).ParseFiles(files...)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "erro ao carregar template: %v", err)

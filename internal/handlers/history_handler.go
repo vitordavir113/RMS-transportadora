@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"strings"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -20,33 +20,38 @@ func NewHistoryHandler(db *gorm.DB) *HistoryHandler {
 func (h *HistoryHandler) Index(c *gin.Context) {
 	var trips []models.Trip
 
-	search := strings.TrimSpace(c.Query("q"))
-
-	query := h.DB.
-		Preload("Truck").
+	if err := h.DB.
 		Preload("Compartments").
-		Where("status = ?", models.StatusFinalizada)
-
-	if search != "" {
-		like := "%" + search + "%"
-
-		query = query.
-			Joins("LEFT JOIN trucks ON trucks.id = trips.truck_id").
-			Joins("LEFT JOIN trip_compartments ON trip_compartments.trip_id = trips.id").
-			Where(`
-				trucks.cavalo_placa ILIKE ?
-				OR trucks.tanque_placa ILIKE ?
-				OR trucks.cavalo_modelo ILIKE ?
-				OR trip_compartments.cliente ILIKE ?
-			`, like, like, like, like).
-			Group("trips.id")
+		Where("company_id = ? AND status = ?", CurrentCompanyID(c), models.StatusFinalizada).
+		Order("finished_at desc").
+		Find(&trips).Error; err != nil {
+		c.String(http.StatusInternalServerError, "erro ao carregar histórico")
+		return
 	}
 
-	query.Order("finished_at desc").Find(&trips)
+	type TripHistoryView struct {
+		models.Trip
+		TotalFrete  float64
+		TotalLitros float64
+	}
+
+	var viewTrips []TripHistoryView
+
+	for _, trip := range trips {
+		item := TripHistoryView{
+			Trip: trip,
+		}
+
+		for _, b := range trip.Compartments {
+			item.TotalFrete += b.FreightTotal
+			item.TotalLitros += b.CapacidadeLitros
+		}
+
+		viewTrips = append(viewTrips, item)
+	}
 
 	RenderPage(c, "history/index.html", gin.H{
-		"Title":  "Histórico",
-		"Trips":  trips,
-		"Search": search,
+		"Title": "Histórico",
+		"Trips": viewTrips,
 	})
 }
