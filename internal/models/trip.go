@@ -22,18 +22,13 @@ type Trip struct {
 	CompanyID uint    `gorm:"not null;index" json:"company_id"`
 	Company   Company `gorm:"foreignKey:CompanyID" json:"company"`
 
-	TractorID uint    `gorm:"not null;index" json:"tractor_id"`
-	Tractor   Tractor `gorm:"foreignKey:TractorID" json:"tractor"`
+	TractorID uint `gorm:"index"`
+	TrailerID uint `gorm:"index"`
+	DriverID  uint `gorm:"index"`
 
-	TrailerID uint    `gorm:"not null;index" json:"trailer_id"`
-	Trailer   Trailer `gorm:"foreignKey:TrailerID" json:"trailer"`
-
-	DriverID uint   `gorm:"not null;index" json:"driver_id"`
-	Driver   Driver `gorm:"foreignKey:DriverID" json:"driver"`
-
-	TractorPlateSnapshot string `gorm:"size:10;not null" json:"tractor_plate_snapshot"`
-	TrailerPlateSnapshot string `gorm:"size:10;not null" json:"trailer_plate_snapshot"`
-	DriverNameSnapshot   string `gorm:"size:150;not null" json:"driver_name_snapshot"`
+	TractorPlateSnapshot string `gorm:"size:10"`
+	TrailerPlateSnapshot string `gorm:"size:10"`
+	DriverNameSnapshot   string `gorm:"size:150"`
 
 	Status TripStatus `gorm:"size:20;not null;index;default:EM_ANDAMENTO" json:"status"`
 
@@ -46,21 +41,19 @@ type Trip struct {
 type TripCompartment struct {
 	ID uint `gorm:"primaryKey" json:"id"`
 
-	TripID uint `gorm:"not null;index" json:"trip_id"`
+	TripID               uint `gorm:"not null;index" json:"trip_id"`
+	TrailerCompartmentID uint
+	ClientID             uint `gorm:"index"`
 
-	TrailerCompartmentID uint `gorm:"not null" json:"trailer_compartment_id"`
-
-	ClientID uint   `gorm:"not null;index" json:"client_id"`
-	Client   Client `gorm:"foreignKey:ClientID" json:"client"`
+	ClientNameSnapshot   string      `gorm:"size:150"`
+	FreightValueSnapshot float64     `gorm:"default:0"`
+	FreightTypeSnapshot  FreightType `gorm:"size:20"`
+	FreightTotal         float64     `gorm:"default:0"`
+	Client               Client      `gorm:"foreignKey:ClientID" json:"client"`
 
 	Numero           int     `gorm:"not null" json:"numero"`
 	CapacidadeLitros float64 `gorm:"not null" json:"capacidade_litros"`
 	Produto          string  `gorm:"size:50;not null" json:"produto"`
-
-	ClientNameSnapshot   string      `gorm:"size:150;not null" json:"client_name_snapshot"`
-	FreightValueSnapshot float64     `gorm:"not null;default:0" json:"freight_value_snapshot"`
-	FreightTypeSnapshot  FreightType `gorm:"size:20;not null" json:"freight_type_snapshot"`
-	FreightTotal         float64     `gorm:"not null;default:0" json:"freight_total"`
 }
 
 func (t Trip) TotalFrete() float64 {
