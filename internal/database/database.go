@@ -8,13 +8,10 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-
-	"transportadora/internal/models"
 )
 
 var DB *gorm.DB
 
-// Connect abre a conexão com o PostgreSQL usando variáveis de ambiente.
 func Connect() *gorm.DB {
 	host := getEnv("DB_HOST", "localhost")
 	port := getEnv("DB_PORT", "5432")
@@ -35,31 +32,14 @@ func Connect() *gorm.DB {
 		log.Fatalf("erro ao conectar no banco de dados: %v", err)
 	}
 
+	if err := RunMigrations(db); err != nil {
+		log.Fatalf("erro ao rodar migrations: %v", err)
+	}
+
+	log.Println("migrations aplicadas com sucesso")
+
 	DB = db
 	return db
-}
-
-// AutoMigrate cria/atualiza as tabelas automaticamente a partir dos models.
-// As migrations SQL equivalentes ficam em /migrations para referência e
-// para quem preferir aplicar manualmente via psql/migrate.
-func AutoMigrate(db *gorm.DB) {
-	err := db.AutoMigrate(
-		&models.User{},
-		&models.Company{},
-
-		&models.Tractor{},
-		&models.Trailer{},
-		&models.TrailerCompartment{},
-		&models.Driver{},
-		&models.Client{},
-
-		&models.Trip{},
-		&models.TripCompartment{},
-	)
-	if err != nil {
-		log.Fatalf("erro ao rodar as migrations: %v", err)
-	}
-	log.Println("migrations aplicadas com sucesso")
 }
 
 func getEnv(key, fallback string) string {

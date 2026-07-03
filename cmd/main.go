@@ -19,13 +19,12 @@ func main() {
 		log.Println("aviso: arquivo .env não encontrado, usando variáveis de ambiente do sistema")
 	}
 
-	db := database.Connect()
-	database.AutoMigrate(db)
-	services.EnsureAdminUser(db)
-
 	if os.Getenv("GIN_MODE") == "" {
 		gin.SetMode(gin.ReleaseMode)
 	}
+
+	db := database.Connect()
+	services.EnsureAdminUser(db)
 
 	r := gin.Default()
 
